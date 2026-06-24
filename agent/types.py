@@ -64,6 +64,12 @@ class Paper:
             "relevance_score": round(self.relevance_score, 4),
             "relevance_reason": self.relevance_reason,
             "markdown_evidence": self.evidence or self._default_evidence(),
+            "abstract": self.abstract,
+            "citation_count": self.citation_count,
+            "arxiv_id": self.arxiv_id,
+            "doi": self.doi,
+            "openalex_id": self.openalex_id,
+            "url": self.url,
             "source": self.source,
         }
 

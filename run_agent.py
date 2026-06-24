@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from agent.search_agent import PaperSearchAgent
+from apis.paper_display import enrich_results_batch
 from configs.loader import load_config
 
 logging.basicConfig(
@@ -62,7 +63,7 @@ def run_single_query(agent: PaperSearchAgent, query: str, query_id: str, config:
                 "sub_queries": result.query_plan.sub_queries,
                 "expanded_terms": result.query_plan.expanded_terms,
             },
-            "results": [p.to_result_dict() for p in result.results],
+            "results": enrich_results_batch([p.to_result_dict() for p in result.results]),
             "clusters": result.clusters,
             "citation_graph": result.citation_graph,
             "stats": result.stats,
@@ -106,7 +107,7 @@ def run_lite_retrieval(query: str, config: dict) -> dict:
         "mode": "lite",
         "query": query,
         "query_plan": query_plan.__dict__,
-        "results": [p.to_result_dict() for p in ranked],
+        "results": enrich_results_batch([p.to_result_dict() for p in ranked]),
         "stats": {
             "api_calls": retrieval.api_call_count,
             "s2_api_calls": retrieval.s2.api_call_count if retrieval.s2 else 0,

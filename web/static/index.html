@@ -4,56 +4,89 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PaRL · 学术论文智能搜索</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css?v=20250628" />
 </head>
 <body>
+  <div class="bg-mesh" aria-hidden="true"></div>
+
   <div class="page">
-    <header class="header">
-      <div>
-        <p class="eyebrow">PaRL · Paper Agent for Research Literature</p>
-        <h1>学术论文智能搜索</h1>
-        <p class="subtitle">输入复杂学术查询，自动检索、排序并归纳相关论文</p>
+    <header class="hero">
+      <div class="hero-badge">PaRL · Paper Agent for Research Literature</div>
+      <h1>学术论文<br /><span class="hero-accent">智能搜索</span></h1>
+      <p class="hero-desc">输入复杂学术问题，自动检索、排序、归纳相关论文，并生成摘要、结论与 BibTeX 引用。</p>
+      <div class="feature-chips">
+        <span class="chip">OpenAlex 检索</span>
+        <span class="chip">智能引文扩展</span>
+        <span class="chip">BibTeX 导出</span>
+        <span class="chip">点击展开译文</span>
       </div>
     </header>
 
     <section class="search-panel">
-      <label for="query">研究查询</label>
-      <textarea
-        id="query"
-        rows="4"
-        placeholder="例如：Find papers on visual question answering that use Earth Mover Distance as evaluation metric"
-      ></textarea>
+      <div class="panel-head">
+        <h2>开始检索</h2>
+        <p>支持英文复杂查询，Ctrl + Enter 快速提交</p>
+      </div>
+
+      <label class="sr-only" for="query">研究查询</label>
+      <div class="query-wrap">
+        <textarea
+          id="query"
+          rows="4"
+          placeholder="例如：Find papers on visual question answering that use Earth Mover Distance as evaluation metric"
+        ></textarea>
+      </div>
 
       <div class="controls">
-        <div class="mode-group">
-          <label>
-            <input type="radio" name="mode" value="lite" checked />
-            快速模式（无 LLM，推荐）
-          </label>
-          <label>
-            <input type="radio" name="mode" value="full" />
-            完整模式（含 LLM，较慢）
-          </label>
+        <div class="control-block">
+          <span class="control-label">运行模式</span>
+          <div class="mode-toggle" role="radiogroup" aria-label="运行模式">
+            <label class="mode-option">
+              <input type="radio" name="mode" value="lite" checked />
+              <span>
+                <strong>快速模式</strong>
+                <small>无 LLM · 约 30–90 秒</small>
+              </span>
+            </label>
+            <label class="mode-option">
+              <input type="radio" name="mode" value="full" />
+              <span>
+                <strong>完整模式</strong>
+                <small>含 LLM · 更精准</small>
+              </span>
+            </label>
+          </div>
         </div>
-        <div class="mode-group">
-          <label for="config">配置</label>
+
+        <div class="control-block control-block--compact">
+          <label class="control-label" for="config">模型配置</label>
           <select id="config">
-            <option value="dev">dev（Qwen2.5-1.5B）</option>
-            <option value="pasa">pasa（PaSa-7B 双模型）</option>
+            <option value="dev">dev · Qwen2.5-1.5B</option>
+            <option value="pasa">pasa · PaSa-7B 双模型</option>
           </select>
         </div>
-        <button id="searchBtn" type="button">开始搜索</button>
+
+        <button id="searchBtn" type="button" class="search-btn">
+          <span class="search-btn-text">开始搜索</span>
+          <span class="search-btn-icon" aria-hidden="true">→</span>
+        </button>
       </div>
-      <p class="hint">快速模式使用 OpenAlex 主检索，约 30–90 秒返回结果。</p>
     </section>
 
     <section id="status" class="status hidden"></section>
-
     <section id="stats" class="stats hidden"></section>
-
     <section id="results" class="results"></section>
+
+    <footer class="footer">
+      <span>PaRL Research Agent</span>
+      <span class="footer-dot">·</span>
+      <span>OpenAlex + 智能引文扩展</span>
+    </footer>
   </div>
 
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js?v=20250630"></script>
 </body>
 </html>

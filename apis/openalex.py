@@ -11,13 +11,16 @@ from urllib.parse import quote
 
 import requests
 
+from apis.arxiv_resolve import extract_arxiv_id_from_work
+
 logger = logging.getLogger(__name__)
 
 OPENALEX_BASE_URL = "https://api.openalex.org"
 
 WORK_SELECT = (
     "id,display_name,abstract_inverted_index,authorships,"
-    "publication_year,primary_location,cited_by_count,ids,locations"
+    "publication_year,primary_location,cited_by_count,ids,locations,"
+    "open_access,best_oa_location"
 )
 
 VENUE_SEARCH_TERMS: dict[str, str] = {
@@ -110,17 +113,7 @@ class OpenAlexClient:
             if author.get("display_name"):
                 authors.append(author["display_name"])
 
-        arxiv_id = ""
-        for loc in raw.get("locations") or []:
-            pdf_url = (loc.get("pdf_url") or "").lower()
-            landing = (loc.get("landing_page_url") or "").lower()
-            for url in (pdf_url, landing):
-                match = re.search(r"arxiv\.org/(?:abs|pdf)/(\d{4}\.\d+)", url)
-                if match:
-                    arxiv_id = match.group(1)
-                    break
-            if arxiv_id:
-                break
+        arxiv_id = extract_arxiv_id_from_work(raw)
 
         return {
             "corpus_id": f"openalex:{openalex_id}" if openalex_id else "",
