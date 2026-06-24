@@ -1,0 +1,44 @@
+# 正式评测配置（云 GPU / API）
+env: prod
+
+model:
+  mode: local
+  name: Qwen/Qwen2.5-7B-Instruct
+  quantization: int4              # 7B 模型 INT4 约 5GB 显存；16GB 可跑双模型 sequential
+  load_mode: shared
+  max_new_tokens: 512
+  selector_max_new_tokens: 64
+  api_base: https://api.deepseek.com/v1
+  api_model: deepseek-chat
+  api_key_env: DEEPSEEK_API_KEY
+
+search:
+  primary_backend: openalex
+  enable_openalex: true
+  enable_s2: true
+  resolve_s2_corpus_id: true
+  openalex_per_query: 10
+  openalex_rate_limit: 0.2
+  enable_metadata_search: true
+  enable_metadata_search: true
+  enable_smart_citation_expand: true
+  expand_seed_papers: 3
+  expand_fetch_per_seed: 30
+  expand_select_per_seed: 10
+  expand_include_cited_by: true
+  max_queries: 5
+  max_expand_layers: 2
+  papers_per_query: 10
+  papers_per_expand: 20
+  api_rate_limit: 1.0
+  score_threshold: 0.5
+
+budget:
+  max_api_calls: 50
+  max_llm_calls: 100
+  max_llm_tokens: 20000
+
+output:
+  results_dir: results/prod
+  include_citation_graph: true
+  include_cluster_summary: true

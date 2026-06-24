@@ -1,0 +1,45 @@
+# PaSa-7B 双模型配置（Crawler + Selector，INT4 量化）
+env: pasa
+
+model:
+  mode: local
+  load_mode: sequential          # sequential: 16GB 显存轮流加载；dual: 并行（需 ~10GB+ 空闲显存）
+  crawler_name: checkpoints/pasa-7b-crawler
+  selector_name: checkpoints/pasa-7b-selector
+  quantization: int4
+  use_pasa_prompts: true           # 使用 PaSa 原版 Prompt 格式
+  use_pasa_selector_scoring: true  # Selector 单 token True 概率打分（与 PaSa 一致）
+  max_new_tokens: 512              # Crawler 生成长度
+  selector_max_new_tokens: 64
+  max_input_tokens: 992            # 对齐 PaSa 训练截断长度
+
+search:
+  primary_backend: openalex
+  enable_openalex: true
+  enable_s2: false                   # 无 Key 时关闭 S2，减少限流等待
+  resolve_s2_corpus_id: false
+  openalex_per_query: 10
+  openalex_rate_limit: 0.2
+  enable_metadata_search: true
+  enable_smart_citation_expand: true
+  expand_seed_papers: 3
+  expand_fetch_per_seed: 25
+  expand_select_per_seed: 8
+  expand_include_cited_by: true
+  max_queries: 3
+  max_expand_layers: 1
+  papers_per_query: 10
+  papers_per_expand: 10
+  min_results: 8
+  api_rate_limit: 1.0
+  score_threshold: 0.35
+
+budget:
+  max_api_calls: 30
+  max_llm_calls: 50
+  max_llm_tokens: 8000
+
+output:
+  results_dir: results/pasa
+  include_citation_graph: true
+  include_cluster_summary: true

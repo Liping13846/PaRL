@@ -1,0 +1,53 @@
+# 本地开发配置（RTX 3050 4GB）
+env: dev
+
+model:
+  # local: 本地 HuggingFace 模型 | api: 调用 OpenAI 兼容 API
+  mode: local
+  # 本地路径（先运行: python scripts/download_model.py）
+  name: checkpoints/Qwen2.5-1.5B-Instruct
+  quantization: int4              # int4: NF4 量化（需 CUDA + bitsandbytes）；none: 全精度
+  load_mode: shared               # shared: 单实例共享（推荐）；sequential/parallel 兼容旧配置
+  max_new_tokens: 256
+  selector_max_new_tokens: 64     # Selector 打分只需 True/False，缩短生成长度
+  # API 模式（mode=api 时生效）
+  api_base: https://api.deepseek.com/v1
+  api_model: deepseek-chat
+  api_key_env: DEEPSEEK_API_KEY
+
+search:
+  primary_backend: openalex          # openalex | semantic_scholar
+  enable_openalex: true
+  enable_s2: true                    # 无 S2_API_KEY 时自动降级为辅助
+  resolve_s2_corpus_id: true         # 通过 DOI/arXiv 解析 S2 CorpusID
+  resolve_s2_max: 3                  # 每次查询最多解析 3 篇，避免无 Key 时大量 S2 调用
+  openalex_per_query: 10
+  openalex_rate_limit: 0.2
+  enable_metadata_search: true       # 解析到 year/venue/cites 时用 OpenAlex filter 检索
+  enable_smart_citation_expand: true
+  expand_seed_papers: 3
+  expand_seed_min_score: 0.5
+  expand_fetch_per_seed: 25         # 每个 seed 拉取参考文献上限
+  expand_select_per_seed: 8         # 预筛后送 Selector 的数量
+  expand_include_cited_by: true     # 同时扩展 forward citations
+  expand_cited_by_limit: 12
+  expand_prefilter_min_score: 0.15
+  expand_min_recall: 8              # 候选数达到则跳过扩展
+  expand_min_high_score: 2          # 高相关数达到则跳过扩展
+  max_queries: 3
+  max_expand_layers: 1
+  papers_per_query: 10
+  papers_per_expand: 10
+  min_results: 8                     # 至少返回的论文数（检索有结果时）
+  api_rate_limit: 1.0            # 秒/次
+  score_threshold: 0.35
+
+budget:
+  max_api_calls: 30
+  max_llm_calls: 50
+  max_llm_tokens: 8000
+
+output:
+  results_dir: results/dev
+  include_citation_graph: true
+  include_cluster_summary: true

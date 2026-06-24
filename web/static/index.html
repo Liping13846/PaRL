@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PaRL · 学术论文智能搜索</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div>
+        <p class="eyebrow">PaRL · Paper Agent for Research Literature</p>
+        <h1>学术论文智能搜索</h1>
+        <p class="subtitle">输入复杂学术查询，自动检索、排序并归纳相关论文</p>
+      </div>
+    </header>
+
+    <section class="search-panel">
+      <label for="query">研究查询</label>
+      <textarea
+        id="query"
+        rows="4"
+        placeholder="例如：Find papers on visual question answering that use Earth Mover Distance as evaluation metric"
+      ></textarea>
+
+      <div class="controls">
+        <div class="mode-group">
+          <label>
+            <input type="radio" name="mode" value="lite" checked />
+            快速模式（无 LLM，推荐）
+          </label>
+          <label>
+            <input type="radio" name="mode" value="full" />
+            完整模式（含 LLM，较慢）
+          </label>
+        </div>
+        <div class="mode-group">
+          <label for="config">配置</label>
+          <select id="config">
+            <option value="dev">dev（Qwen2.5-1.5B）</option>
+            <option value="pasa">pasa（PaSa-7B 双模型）</option>
+          </select>
+        </div>
+        <button id="searchBtn" type="button">开始搜索</button>
+      </div>
+      <p class="hint">快速模式使用 OpenAlex 主检索，约 30–90 秒返回结果。</p>
+    </section>
+
+    <section id="status" class="status hidden"></section>
+
+    <section id="stats" class="stats hidden"></section>
+
+    <section id="results" class="results"></section>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
